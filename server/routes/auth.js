@@ -5,14 +5,19 @@ import User from "../config.js";
 import passport from "passport";
 import {} from "dotenv/config";
 
+
+
 router.get("/login/success", async (req, res) => {
   if (req.user) {
     res.status(200).json({
       success: true,
       message: "successful",
       user: req.user,
-
       cookies: req.cookies,
+
+
+
+      
     });
   }
 });
