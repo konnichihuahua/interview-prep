@@ -2,7 +2,7 @@
 import GoogleButton from "react-google-button";
 import React, { useState } from "react";
 
-const LoginForm = () => {
+const LoginForm = ({ setIsAuth }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,6 +15,7 @@ const LoginForm = () => {
   const googleSignIn = () => {
     window.open("http://localhost:8080/auth/google", "_self");
   };
+
   return (
     <div className="flex justify-center items-center">
       <form className="bg-white p-8 shadow-md rounded-md w-96">

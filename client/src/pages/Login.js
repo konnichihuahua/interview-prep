@@ -1,10 +1,10 @@
 import { useState } from "react";
 import LoginForm from "../components/LoginForm";
 
-function Login() {
+function Login({ setIsAuth }) {
   return (
     <div className="flex items-center justify-center">
-      <LoginForm />
+      <LoginForm setIsAuth={setIsAuth} />
     </div>
   );
 }

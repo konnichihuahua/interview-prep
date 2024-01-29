@@ -9,7 +9,9 @@ import path from "path";
 import bcrypt from "bcrypt";
 import ejs from "ejs";
 import authRoute from "./routes/auth.js";
-import collection from "./config.js";
+import questionsRoute from "./routes/questions.js";
+import User from "./config.js";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
   })
 );
+
+app.use(bodyParser.json());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -34,6 +38,7 @@ app.use(
 );
 
 app.use("/auth", authRoute);
+app.use("/server", questionsRoute);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
