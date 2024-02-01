@@ -36,8 +36,8 @@ const generateInterviewQuestions = async (jobDescription) => {
     model: "gpt-3.5-turbo",
   });
 
-  console.log(completion.choices[0].message.content);
-  return completion;
+  const result = completion.choices[0].message.content;
+  return result;
 };
 
 router.post("/get/questions", async (req, res) => {
@@ -49,7 +49,7 @@ router.post("/get/questions", async (req, res) => {
     }
 
     // Generate interview questions based on the job description
-    const questions = generateInterviewQuestions(jobDescription);
+    const questions = await generateInterviewQuestions(jobDescription);
 
     // Send the generated questions as a response
     res.json({ questions });

@@ -1,43 +1,15 @@
 import React, { useState } from "react";
 
-const InterviewForm = ({ user, isAuth }) => {
-  const [jobDescription, setJobDescription] = useState("");
-  const [interviewQuestions, setInterviewQuestions] = useState([]);
-
+const InterviewForm = ({
+  user,
+  isAuth,
+  jobDescription,
+  setJobDescription,
+  startInterview,
+  setIsInterviewing,
+}) => {
   const handleJobDescriptionChange = (e) => {
     setJobDescription(e.target.value);
-  };
-
-  const startInterview = async () => {
-    try {
-      // Make a POST request to the server
-      const response = await fetch(
-        "http://localhost:8080/server/get/questions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ jobDescription }),
-        }
-      );
-
-      // Check if the request was successful
-      if (!response.ok) {
-        throw new Error("Failed to fetch interview questions");
-      }
-
-      // Parse the response as JSON
-      const data = await response.json();
-
-      // Update state with the received interview questions
-      // setInterviewQuestions(data.questions);
-      console.log(data.questions);
-      // Additional logic as needed
-      console.log("Received Interview Questions:", data.questions);
-    } catch (error) {
-      console.error("Error fetching interview questions:", error.message);
-    }
   };
 
   return (
