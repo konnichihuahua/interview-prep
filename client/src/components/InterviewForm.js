@@ -7,6 +7,7 @@ const InterviewForm = ({
   setJobDescription,
   startInterview,
   setIsInterviewing,
+  setIsLoading,
 }) => {
   const handleJobDescriptionChange = (e) => {
     setJobDescription(e.target.value);

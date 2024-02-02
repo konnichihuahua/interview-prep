@@ -56,6 +56,7 @@ function App() {
   // };
   const [interviewQuestions, setInterviewQuestions] = useState([]);
   const [isInterviewing, setIsInterviewing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [user, setUser] = useState(null);
 
@@ -80,6 +81,7 @@ function App() {
   const startInterview = async () => {
     try {
       // Make a POST request to the server
+      setIsLoading(true);
       const response = await fetch(
         "http://localhost:8080/server/get/questions",
         {
@@ -99,10 +101,11 @@ function App() {
       // Parse the response as JSON
       const data = await response.json();
       setIsInterviewing(true);
+      setIsLoading(false);
 
       // Update state with the received interview questions
-      setInterviewQuestions(data.questions);
-      console.log(data.questions);
+      setInterviewQuestions(JSON.parse(data.questions));
+      console.log(interviewQuestions);
       // Additional logic as needed
       console.log("Received Interview Questions:", data.questions);
     } catch (error) {
@@ -167,6 +170,8 @@ function App() {
                   setIsInterviewing={setInterviewQuestions}
                   interviewQuestions={interviewQuestions}
                   setInterviewQuestions={setInterviewQuestions}
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
                 />
               }
             ></Route>

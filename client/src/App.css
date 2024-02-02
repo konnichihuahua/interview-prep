@@ -45,3 +45,18 @@
 background-color: #23C6F4;
 
 }
+
+.loading-icon {
+  color: #23C6F4;
+  font-size: 8rem;
+  animation: animate 2s infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}

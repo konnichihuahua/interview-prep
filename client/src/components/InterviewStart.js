@@ -10,7 +10,16 @@ const InterviewStart = ({ user, isAuth, interviewQuestions }) => {
             : "Ready to ace your interview?"}
         </span>
       </h1>
-      {interviewQuestions}
+      <ul>
+        {interviewQuestions.questions.map((question, index) => (
+          <li key={index}>
+            <strong>Question:</strong> {question.question} <br />
+            <strong>Category:</strong> {question.category} <br />
+            <strong>Difficulty:</strong> {question.difficulty} <br />
+            <br />
+          </li>
+        ))}
+      </ul>
       <button
         type="button"
         className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg px-5 py-7 text-center me-2 mb-2"
