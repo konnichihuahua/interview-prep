@@ -105,7 +105,7 @@ function App() {
 
       // Update state with the received interview questions
       setInterviewQuestions(JSON.parse(data.questions));
-      console.log(interviewQuestions);
+      
       // Additional logic as needed
       console.log("Received Interview Questions:", data.questions);
     } catch (error) {

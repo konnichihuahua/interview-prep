@@ -2,6 +2,7 @@ import express from "express";
 import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
+import { generateInterviewQuestions } from "./questionGenerator.js";
 
 const openai = new OpenAI();
 const router = express.Router();
@@ -18,6 +19,8 @@ async function main() {
   await fs.promises.writeFile(speechFile, buffer);
 }
 
+// const questionTexts = questionsArray.map(questionObj => questionObj.question);
+
 main();
 router.post("/generate", async (req, res) => {
   try {
@@ -28,10 +31,12 @@ router.post("/generate", async (req, res) => {
     }
 
     // Generate interview questions based on the job description
-    const questions = await generateInterviewQuestions(jobDescription);
+    const data = await generateInterviewQuestions(jobDescription);
+
+    const questionsArray = JSON.parse(data);
 
     // Send the generated questions as a response
-    res.json({ questions });
+    res.json({ questionsArray });
   } catch (error) {
     console.error("Error generating interview questions:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
