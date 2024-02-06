@@ -7,16 +7,33 @@ import path from "path";
 const openai = new OpenAI();
 const router = express.Router();
 const speechFile = path.resolve("./speech.mp3");
-async function main() {
-  const mp3 = await openai.audio.speech.create({
-    model: "tts-1",
-    voice: "alloy",
-    input:
-      "Tell us about your experience with React.js and how you have used it in previous projects.",
-  });
-  console.log(speechFile);
-  const buffer = Buffer.from(await mp3.arrayBuffer());
-  await fs.promises.writeFile(speechFile, buffer);
+const speechDirectory = "./audio"; // Directory to save MP3 files
+if (!fs.existsSync(speechDirectory)) {
+  fs.mkdirSync(speechDirectory);
+}
+async function generateAudioFile(question) {
+  const fileName = `${Date.now()}.mp3`;
+  const filePath = path.join(speechDirectory, fileName);
+
+  try {
+    const mp3 = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: "alloy",
+      input: `${question}`,
+    });
+
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+    await fs.promises.writeFile(filePath, buffer);
+    console.log(`Audio file saved: ${filePath}`);
+  } catch (error) {
+    console.error("Error generating audio file:", error.message);
+  }
+}
+
+async function generateAndSaveAudioFiles(questions) {
+  for (const question of questions) {
+    await generateAudioFile(question);
+  }
 }
 
 router.post("/get/questions", async (req, res) => {
@@ -29,11 +46,14 @@ router.post("/get/questions", async (req, res) => {
 
     // Generate interview questions based on the job description
     const questions = await generateInterviewQuestions(jobDescription);
-    console.log(questions);
+    console.log(typeof JSON.parse(questions));
+    const questionsArray = JSON.parse(questions).questions;
+    const questionTexts = questionsArray.map(
+      (questionObj) => questionObj.question
+    );
 
-    // Send the generated questions as a response
-    // res.json({ questionsArray });
-    // Send the generated questions as a response
+    console.log(questionTexts);
+    await generateAndSaveAudioFiles(questionTexts);
     res.json({ questions });
   } catch (error) {
     console.error("Error generating interview questions:", error.message);
