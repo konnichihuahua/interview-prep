@@ -15,6 +15,7 @@ function Home({
   setIsInterviewing,
   isLoading,
   setIsLoading,
+  playAudio,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10">
@@ -36,6 +37,7 @@ function Home({
           <InterviewStart
             isInterviewing={isInterviewing}
             interviewQuestions={interviewQuestions}
+            playAudio={playAudio}
           />
         )}
       </div>

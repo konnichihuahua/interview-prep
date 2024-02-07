@@ -11,8 +11,8 @@ const speechDirectory = "./audio"; // Directory to save MP3 files
 if (!fs.existsSync(speechDirectory)) {
   fs.mkdirSync(speechDirectory);
 }
-async function generateAudioFile(question) {
-  const fileName = `${Date.now()}.mp3`;
+async function generateAudioFile(question, index) {
+  const fileName = `question_${index}.mp3`; // Use index in file name
   const filePath = path.join(speechDirectory, fileName);
 
   try {
@@ -31,8 +31,8 @@ async function generateAudioFile(question) {
 }
 
 async function generateAndSaveAudioFiles(questions) {
-  for (const question of questions) {
-    await generateAudioFile(question);
+  for (let i = 0; i < questions.length; i++) {
+    await generateAudioFile(questions[i], i); // Pass index i
   }
 }
 
@@ -59,6 +59,20 @@ router.post("/get/questions", async (req, res) => {
     console.error("Error generating interview questions:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+router.get("/audio/:index", (req, res) => {
+  const index = req.params.index;
+
+  // Assuming you have generated and saved the files in the 'audio-files' directory
+  const filePath = path.join(__dirname, "audio-files", `question_${index}.mp3`);
+
+  // Set appropriate headers
+  res.setHeader("Content-Type", "audio/mpeg");
+  res.setHeader("Content-Disposition", "inline");
+
+  // Send the audio file
+  res.sendFile(filePath);
 });
 
 export default router;

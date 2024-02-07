@@ -54,6 +54,14 @@ function App() {
   //     "_self"
   //   );
   // };
+
+  const playAudio = (index) => {
+    console.log("works!");
+    const audio = new Audio(
+      `http://localhost:8080/server/question/audio/${index}`
+    );
+    audio.play();
+  };
   const [interviewQuestions, setInterviewQuestions] = useState([]);
   const [isInterviewing, setIsInterviewing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +113,7 @@ function App() {
 
       // Update state with the received interview questions
       setInterviewQuestions(JSON.parse(data.questions));
-      
+
       // Additional logic as needed
       console.log("Received Interview Questions:", data.questions);
     } catch (error) {
@@ -172,6 +180,7 @@ function App() {
                   setInterviewQuestions={setInterviewQuestions}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
+                  playAudio={playAudio}
                 />
               }
             ></Route>
