@@ -54,11 +54,12 @@ function App() {
   //     "_self"
   //   );
   // };
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const playAudio = (index) => {
     console.log("works!");
     const audio = new Audio(
-      `http://localhost:8080/server/question/audio/${index}`
+      `http://localhost:8080/audio/question_${index}.mp3`
     );
     audio.play();
   };
@@ -105,19 +106,24 @@ function App() {
       if (!response.ok) {
         throw new Error("Failed to fetch interview questions");
       }
-      console.log(response);
+
       // Parse the response as JSON
       const data = await response.json();
-      setIsInterviewing(true);
-      setIsLoading(false);
 
       // Update state with the received interview questions
-      setInterviewQuestions(JSON.parse(data.questions));
+      const questionsArray = JSON.parse(data.questions).questions;
+      const questionTexts = questionsArray.map(
+        (questionObj) => questionObj.question
+      );
 
-      // Additional logic as needed
-      console.log("Received Interview Questions:", data.questions);
+      setInterviewQuestions(questionTexts);
+      console.log(questionTexts);
     } catch (error) {
       console.error("Error fetching interview questions:", error.message);
+    } finally {
+      // Always set isLoading to false after completing the fetch operation
+      setIsInterviewing(true);
+      setIsLoading(false);
     }
   };
 
@@ -181,6 +187,8 @@ function App() {
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
                   playAudio={playAudio}
+                  currentQuestionIndex={currentQuestionIndex}
+                  setCurrentQuestionIndex={setCurrentQuestionIndex}
                 />
               }
             ></Route>
@@ -193,6 +201,7 @@ function App() {
           </Routes>
         </main>
       </BrowserRouter>
+      <button onClick={() => playAudio(0)}>Paly audio</button>
       <footer className="p-10">
         <nav>
           <a href="mailto:jsargento477@gmail.com underline">

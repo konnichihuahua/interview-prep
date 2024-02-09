@@ -12,8 +12,12 @@ import authRoute from "./routes/auth.js";
 import questionsRoute from "./routes/questions.js";
 import User from "./config.js";
 import bodyParser from "body-parser";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
+app.use("/audio", express.static(path.join(__dirname, "audio")));
 
 app.set("view engine", ejs);
 app.use(

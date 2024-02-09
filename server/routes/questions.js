@@ -46,7 +46,6 @@ router.post("/get/questions", async (req, res) => {
 
     // Generate interview questions based on the job description
     const questions = await generateInterviewQuestions(jobDescription);
-    console.log(typeof JSON.parse(questions));
     const questionsArray = JSON.parse(questions).questions;
     const questionTexts = questionsArray.map(
       (questionObj) => questionObj.question

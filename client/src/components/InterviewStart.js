@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 
-const InterviewStart = ({ user, isAuth, interviewQuestions, playAudio }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+const InterviewStart = ({
+  user,
+  isAuth,
+  interviewQuestions,
+  playAudio,
+  currentQuestionIndex,
+  setCurrentQuestionIndex,
+}) => {
   const playNextAudio = () => {
+    console.log(interviewQuestions.length);
+    console.log(currentQuestionIndex);
     if (currentQuestionIndex < interviewQuestions.length) {
       const audio = new Audio(
-        `http://localhost:8080/server/questions/audio/${currentQuestionIndex}`
+        `http://localhost:8080/audio/question_${currentQuestionIndex}.mp3`
       );
       audio.play();
     }
@@ -14,6 +21,7 @@ const InterviewStart = ({ user, isAuth, interviewQuestions, playAudio }) => {
 
   const handleNextClick = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    playNextAudio();
   };
 
   return (
@@ -38,14 +46,27 @@ const InterviewStart = ({ user, isAuth, interviewQuestions, playAudio }) => {
 
       {currentQuestionIndex < interviewQuestions.length ? (
         <div>
-          <p>
-            Question {currentQuestionIndex + 1}:{" "}
-            {interviewQuestions[currentQuestionIndex]}
-          </p>
-          <button onClick={handleNextClick}>Next</button>
+          {currentQuestionIndex ? (
+            <button onClick={handleNextClick}> START INTERVIEw</button>
+          ) : (
+            <div>
+              <p>
+                Question {currentQuestionIndex + 1}:{" "}
+                {interviewQuestions[currentQuestionIndex]}
+              </p>
+              <button onClick={handleNextClick}>Next</button>
+            </div>
+          )}
         </div>
       ) : (
-        <button onClick={() => playAudio(0)}> meow</button>
+        <button
+          onClick={() =>
+            console.log(currentQuestionIndex, interviewQuestions.length)
+          }
+        >
+          {" "}
+          meow
+        </button>
       )}
       <button
         type="button"

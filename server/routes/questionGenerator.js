@@ -10,7 +10,7 @@ export const generateInterviewQuestions = async (jobDescription) => {
       {
         role: "user",
         content: `
-        "I am a job seeker currently looking for employment. Please generate 10 interview questions based on the following job description, so I can practice for an upcoming interview: ${jobDescription}
+        "I am a job seeker currently looking for employment. Please generate 3 interview questions based on the following job description, so I can practice for an upcoming interview: ${jobDescription}
         Ensure that each question is sent in JSON format.
 
         Expected JSON Response Template:
