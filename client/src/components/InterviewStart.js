@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const InterviewStart = ({
   user,
@@ -8,20 +8,19 @@ const InterviewStart = ({
   currentQuestionIndex,
   setCurrentQuestionIndex,
 }) => {
-  const playNextAudio = () => {
-    console.log(interviewQuestions.length);
-    console.log(currentQuestionIndex);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    // Play audio when currentQuestionIndex changes
     if (currentQuestionIndex < interviewQuestions.length) {
-      const audio = new Audio(
-        `http://localhost:8080/audio/question_${currentQuestionIndex}.mp3`
-      );
-      audio.play();
+      playAudio(currentQuestionIndex);
+      setIsPlaying(true);
     }
-  };
+  }, [currentQuestionIndex, interviewQuestions, playAudio]);
 
   const handleNextClick = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-    playNextAudio();
+    setIsPlaying(false); // Stop playing audio when moving to next question
   };
 
   return (
@@ -46,17 +45,15 @@ const InterviewStart = ({
 
       {currentQuestionIndex < interviewQuestions.length ? (
         <div>
-          {currentQuestionIndex ? (
-            <button onClick={handleNextClick}> START INTERVIEw</button>
-          ) : (
-            <div>
-              <p>
-                Question {currentQuestionIndex + 1}:{" "}
-                {interviewQuestions[currentQuestionIndex]}
-              </p>
-              <button onClick={handleNextClick}>Next</button>
-            </div>
-          )}
+          <p>
+            Question {currentQuestionIndex + 1}:{" "}
+            {interviewQuestions[currentQuestionIndex]}
+          </p>
+          <button onClick={handleNextClick}>
+            {currentQuestionIndex === interviewQuestions.length - 1
+              ? "End Interview"
+              : "Next"}
+          </button>
         </div>
       ) : (
         <button
@@ -65,15 +62,9 @@ const InterviewStart = ({
           }
         >
           {" "}
-          meow
+          Download PDF Results
         </button>
       )}
-      <button
-        type="button"
-        className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg px-5 py-7 text-center me-2 mb-2"
-      >
-        START INTERVIEW
-      </button>
     </div>
   );
 };
