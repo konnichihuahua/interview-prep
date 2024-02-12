@@ -55,12 +55,13 @@ function App() {
   //   );
   // };
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+  const [audioIsPlaying, setAudioIsPlaying] = useState(false);
   const playAudio = (index) => {
     console.log("works!");
     const audio = new Audio(
       `http://localhost:8080/audio/question_${index}.mp3`
     );
+
     audio.play();
   };
   const [interviewQuestions, setInterviewQuestions] = useState([]);
@@ -189,6 +190,7 @@ function App() {
                   playAudio={playAudio}
                   currentQuestionIndex={currentQuestionIndex}
                   setCurrentQuestionIndex={setCurrentQuestionIndex}
+                  audioIsPlaying={audioIsPlaying}
                 />
               }
             ></Route>
@@ -201,7 +203,7 @@ function App() {
           </Routes>
         </main>
       </BrowserRouter>
-      <button onClick={() => playAudio(0)}>Paly audio</button>
+
       <footer className="p-10">
         <nav>
           <a href="mailto:jsargento477@gmail.com underline">

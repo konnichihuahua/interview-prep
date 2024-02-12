@@ -7,6 +7,7 @@ const InterviewStart = ({
   playAudio,
   currentQuestionIndex,
   setCurrentQuestionIndex,
+  audioIsPlaying,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -21,6 +22,43 @@ const InterviewStart = ({
   const handleNextClick = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     setIsPlaying(false); // Stop playing audio when moving to next question
+  };
+
+  const [transcription, setTranscription] = useState("");
+  const [listening, setListening] = useState(false);
+  const recognition = new window.webkitSpeechRecognition();
+
+  recognition.continuous = true;
+
+  recognition.onstart = () => {
+    setListening(true);
+  };
+  recognition.onerror = (event) => {
+    if (event.error === "no-speech") {
+      console.log("No speech detected. Please try again.");
+      // Optionally, you can provide feedback to the user here
+    } else {
+      console.error("Speech recognition error:", event.error);
+    }
+    setListening(false);
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[event.results.length - 1][0].transcript;
+    setTranscription((prevTranscription) => prevTranscription + transcript);
+  };
+
+  recognition.onerror = (event) => {
+    console.error("Speech recognition error:", event.error);
+    setListening(false);
+  };
+
+  const toggleListening = () => {
+    if (listening) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
   };
 
   return (
@@ -42,7 +80,21 @@ const InterviewStart = ({
           </li>
         ))}
       </ul> */}
-
+      {!audioIsPlaying && (
+        <div>
+          <button onClick={toggleListening}>
+            {listening ? "Stop Listening" : "Start Listening"}
+          </button>
+          <textarea
+            className="text-gray-300"
+            value={transcription}
+            onChange={(e) => setTranscription(e.target.value)}
+            rows={10}
+            cols={50}
+            placeholder="Speech to Text..."
+          />
+        </div>
+      )}
       {currentQuestionIndex < interviewQuestions.length ? (
         <div>
           <p>

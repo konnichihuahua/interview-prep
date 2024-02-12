@@ -18,6 +18,7 @@ function Home({
   playAudio,
   currentQuestionIndex,
   setCurrentQuestionIndex,
+  audioIsPlaying,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10">
@@ -39,6 +40,7 @@ function Home({
           <InterviewStart
             isInterviewing={isInterviewing}
             interviewQuestions={interviewQuestions}
+            audioIsPlaying={audioIsPlaying}
             playAudio={playAudio}
             currentQuestionIndex={currentQuestionIndex}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
