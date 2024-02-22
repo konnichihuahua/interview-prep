@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import InterviewForm from "../components/InterviewForm";
 import InterviewStart from "../components/InterviewStart";
 import Loading from "../components/Loading";
@@ -19,6 +19,9 @@ function Home({
   currentQuestionIndex,
   setCurrentQuestionIndex,
   audioIsPlaying,
+  setAudioIsPlaying,
+  transcription,
+  setTranscription,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10">
@@ -42,8 +45,11 @@ function Home({
             interviewQuestions={interviewQuestions}
             audioIsPlaying={audioIsPlaying}
             playAudio={playAudio}
+            setAudioIsPlaying={setAudioIsPlaying}
             currentQuestionIndex={currentQuestionIndex}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
+            transcription={transcription}
+            setTranscription={setTranscription}
           />
         )}
       </div>

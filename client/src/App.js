@@ -1,11 +1,12 @@
 import logo from "./logo.svg";
 import Home from "./pages/Home";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import "./App.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Login from "./pages/Login";
 import { useEffect } from "react";
+import { AudioRecorder } from "react-audio-voice-recorder";
 
 function App() {
   const [jobDescription, setJobDescription] = useState(`Job Description:
@@ -56,17 +57,25 @@ function App() {
   // };
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [audioIsPlaying, setAudioIsPlaying] = useState(false);
-  const playAudio = (index) => {
-    console.log("works!");
+
+  const playAudio = useCallback((index) => {
+    console.log("Playing audio for question index:", index);
     const audio = new Audio(
       `http://localhost:8080/audio/question_${index}.mp3`
     );
 
+    audio.onended = () => {
+      console.log("Audio playback ended for question index:", index);
+      setAudioIsPlaying(false); // Set audioIsPlaying to false when audio playback ends
+    };
+
     audio.play();
-  };
+  }, []);
+
   const [interviewQuestions, setInterviewQuestions] = useState([]);
   const [isInterviewing, setIsInterviewing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [transcription, setTranscription] = useState("");
 
   const [user, setUser] = useState(null);
 
@@ -118,6 +127,7 @@ function App() {
       );
 
       setInterviewQuestions(questionTexts);
+
       console.log(questionTexts);
     } catch (error) {
       console.error("Error fetching interview questions:", error.message);
@@ -131,6 +141,44 @@ function App() {
   useEffect(() => {
     getUser();
   }, []);
+
+  // Live Recording code ---------
+  const addAudioElement = async (audioBlob) => {
+    const url = URL.createObjectURL(audioBlob);
+    console.log(audioBlob);
+    const audio = document.createElement("audio");
+    audio.src = url;
+    audio.controls = true;
+    document.body.appendChild(audio);
+
+    try {
+      // Read the contents of the audioBlob as binary data
+      const arrayBuffer = await audioBlob.arrayBuffer();
+
+      // Convert the binary data into a UInt8Array
+
+      const formData = new FormData();
+      // Set the audio data with the key "audioBytes"
+      formData.append(
+        "file",
+        new Blob([arrayBuffer], { type: "audio/webm" }),
+        "input.webm"
+      );
+
+      const response = await fetch("http://localhost:8080/transcribe/stt", {
+        method: "POST",
+        body: formData,
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Failed to transcribe audio");
+      }
+
+      // Handle successful response here
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="App min-h-100 flex flex-col p-5 gap-10">
@@ -191,6 +239,9 @@ function App() {
                   currentQuestionIndex={currentQuestionIndex}
                   setCurrentQuestionIndex={setCurrentQuestionIndex}
                   audioIsPlaying={audioIsPlaying}
+                  setAudioIsPlaying={setAudioIsPlaying}
+                  transcription={transcription}
+                  setTranscription={setTranscription}
                 />
               }
             ></Route>
@@ -203,7 +254,17 @@ function App() {
           </Routes>
         </main>
       </BrowserRouter>
-
+      <AudioRecorder
+        onRecordingComplete={addAudioElement}
+        audioTrackConstraints={{
+          noiseSuppression: true,
+          echoCancellation: true,
+        }}
+        downloadOnSavePress={true}
+        downloadFileExtension="flac"
+        showVisualizer="true"
+      />
+      <div className="text-white">Transcription {transcription}</div>
       <footer className="p-10">
         <nav>
           <a href="mailto:jsargento477@gmail.com underline">

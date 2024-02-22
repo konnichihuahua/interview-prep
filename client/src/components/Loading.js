@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FiCommand } from "react-icons/fi";
 import "../App.css";
 const Loading = ({ user, isAuth, interviewQuestions }) => {
