@@ -60,3 +60,7 @@ background-color: #23C6F4;
     transform: rotate(720deg);
   }
 }
+
+.record-btn {
+  width:100px;
+}

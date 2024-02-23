@@ -149,7 +149,6 @@ function App() {
     const audio = document.createElement("audio");
     audio.src = url;
     audio.controls = true;
-    document.body.appendChild(audio);
 
     try {
       // Read the contents of the audioBlob as binary data
@@ -169,7 +168,9 @@ function App() {
         method: "POST",
         body: formData,
       });
-      console.log(response);
+      const data = await response.json();
+      setTranscription(data.transcriptionText);
+      console.log(data);
       if (!response.ok) {
         throw new Error("Failed to transcribe audio");
       }
@@ -242,6 +243,7 @@ function App() {
                   setAudioIsPlaying={setAudioIsPlaying}
                   transcription={transcription}
                   setTranscription={setTranscription}
+                  addAudioElement={addAudioElement}
                 />
               }
             ></Route>
@@ -254,17 +256,7 @@ function App() {
           </Routes>
         </main>
       </BrowserRouter>
-      <AudioRecorder
-        onRecordingComplete={addAudioElement}
-        audioTrackConstraints={{
-          noiseSuppression: true,
-          echoCancellation: true,
-        }}
-        downloadOnSavePress={true}
-        downloadFileExtension="flac"
-        showVisualizer="true"
-      />
-      <div className="text-white">Transcription {transcription}</div>
+
       <footer className="p-10">
         <nav>
           <a href="mailto:jsargento477@gmail.com underline">
