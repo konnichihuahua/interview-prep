@@ -23,6 +23,7 @@ function Home({
   transcription,
   setTranscription,
   addAudioElement,
+  audioDuration,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10">
@@ -52,6 +53,7 @@ function Home({
             transcription={transcription}
             setTranscription={setTranscription}
             addAudioElement={addAudioElement}
+            audioDuration={audioDuration}
           />
         )}
       </div>

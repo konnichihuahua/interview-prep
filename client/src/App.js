@@ -57,12 +57,30 @@ function App() {
   // };
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [audioIsPlaying, setAudioIsPlaying] = useState(false);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const [interviewQuestions, setInterviewQuestions] = useState([]);
+  const [isInterviewing, setIsInterviewing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [transcription, setTranscription] = useState("");
+  const [user, setUser] = useState(null);
+  const [isAuth, setIsAuth] = useState(false);
 
   const playAudio = useCallback((index) => {
     console.log("Playing audio for question index:", index);
+
     const audio = new Audio(
       `http://localhost:8080/audio/question_${index}.mp3`
     );
+    audio.onloadedmetadata = () => {
+      console.log("Duration of audio:", audio.duration); // Log the duration of the audio
+      setAudioDuration(audio.duration);
+      setTimeout(() => {
+        console.log("Timeout finished for question index:", index);
+
+        setAudioIsPlaying(false);
+        console.log(audioIsPlaying);
+      }, audio.duration * 1000); // Convert duration to milliseconds
+    };
 
     audio.onended = () => {
       console.log("Audio playback ended for question index:", index);
@@ -71,15 +89,6 @@ function App() {
 
     audio.play();
   }, []);
-
-  const [interviewQuestions, setInterviewQuestions] = useState([]);
-  const [isInterviewing, setIsInterviewing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [transcription, setTranscription] = useState("");
-
-  const [user, setUser] = useState(null);
-
-  const [isAuth, setIsAuth] = useState(false);
 
   const getUser = async () => {
     try {
@@ -244,6 +253,7 @@ function App() {
                   transcription={transcription}
                   setTranscription={setTranscription}
                   addAudioElement={addAudioElement}
+                  audioDuration={audioDuration}
                 />
               }
             ></Route>
