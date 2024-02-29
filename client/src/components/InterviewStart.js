@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import "../App.css";
 const InterviewStart = ({
@@ -10,25 +11,17 @@ const InterviewStart = ({
   setCurrentQuestionIndex,
   setAudioIsPlaying,
   transcription,
-  audioDuration,
   setTranscription,
   addAudioElement,
   audioIsPlaying,
 }) => {
-  const [countdown, setCountdown] = useState(audioDuration);
-
-  useEffect(() => {
-    // Play audio when currentQuestionIndex changes
-    if (currentQuestionIndex < interviewQuestions.length) {
-      playAudio(currentQuestionIndex);
-      setAudioIsPlaying(true);
-    }
-  }, [currentQuestionIndex, interviewQuestions, playAudio, setAudioIsPlaying]);
   const recorderControls = useAudioRecorder();
 
   const handleNextClick = () => {
+    setTranscription("");
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-    setAudioIsPlaying(false); // Stop playing audio when moving to next question
+
+    playAudio(currentQuestionIndex + 1);
   };
 
   return (
@@ -45,30 +38,36 @@ const InterviewStart = ({
             Question {currentQuestionIndex + 1}:{" "}
             {interviewQuestions[currentQuestionIndex]}
           </p>
-          {!audioIsPlaying && (
-            <div className="flex flex-col items-center justify-center gap-10">
-              <AudioRecorder
-                onRecordingComplete={addAudioElement}
-                audioTrackConstraints={{
-                  noiseSuppression: true,
-                  echoCancellation: true,
-                }}
-                downloadFileExtension="webm"
-                showVisualizer="true"
-                classes="p-6 rounded-lg text-lg"
-                recorderControls={recorderControls}
-              />
-              <textarea
-                className="border border-gray-300 rounded-lg p-4 w-full text-center text-gray-500 h-40 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                value={transcription}
-                onChange={(e) => setTranscription(e.target.value)}
-                rows={10}
-                cols={50}
-                placeholder="Your Answer Will Be Displayed Here...."
-                readOnly={true}
-              />
-            </div>
-          )}
+          <div
+            className={`flex flex-col items-center justify-center gap-10 ${
+              audioIsPlaying ? "hidden" : ""
+            }`}
+          >
+            <AudioRecorder
+              onRecordingComplete={(audioBlob) => {
+                // Call addAudioElement when recording is complete
+                addAudioElement(audioBlob);
+              }}
+              audioTrackConstraints={{
+                noiseSuppression: true,
+                echoCancellation: true,
+              }}
+              downloadFileExtension="webm"
+              showVisualizer={true}
+              classes="p-6 rounded-lg text-lg"
+              recorderControls={recorderControls}
+            />
+
+            <textarea
+              className="border border-gray-300 rounded-lg p-4 w-full text-center text-gray-500 h-40 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500"
+              value={transcription}
+              onChange={(e) => setTranscription(e.target.value)}
+              rows={10}
+              cols={50}
+              placeholder="Your Answer Will Be Displayed Here...."
+              readOnly={true}
+            />
+          </div>
           {transcription && (
             <button
               onClick={handleNextClick}

@@ -6,7 +6,6 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Login from "./pages/Login";
 import { useEffect } from "react";
-import { AudioRecorder } from "react-audio-voice-recorder";
 
 function App() {
   const [jobDescription, setJobDescription] = useState(`Job Description:
@@ -65,30 +64,32 @@ function App() {
   const [user, setUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
 
-  const playAudio = useCallback((index) => {
+  const playAudio = async (index) => {
     console.log("Playing audio for question index:", index);
+    console.log(currentQuestionIndex);
+    console.log(interviewQuestions.length);
+    if (index < interviewQuestions.length) {
+      const audio = new Audio(
+        `http://localhost:8080/audio/question_${index}.mp3`
+      );
+      audio.onloadedmetadata = () => {
+        console.log("Duration of audio:", audio.duration); // Log the duration of the audio
+        setAudioDuration(audio.duration);
+        setTimeout(() => {
+          console.log("Timeout finished for question index:", index);
+        }, audio.duration * 1000); // Convert duration to milliseconds
+      };
 
-    const audio = new Audio(
-      `http://localhost:8080/audio/question_${index}.mp3`
-    );
-    audio.onloadedmetadata = () => {
-      console.log("Duration of audio:", audio.duration); // Log the duration of the audio
-      setAudioDuration(audio.duration);
-      setTimeout(() => {
-        console.log("Timeout finished for question index:", index);
-
+      audio.onended = () => {
+        console.log("Audio playback ended for question index:", index);
         setAudioIsPlaying(false);
-        console.log(audioIsPlaying);
-      }, audio.duration * 1000); // Convert duration to milliseconds
-    };
-
-    audio.onended = () => {
-      console.log("Audio playback ended for question index:", index);
-      setAudioIsPlaying(false); // Set audioIsPlaying to false when audio playback ends
-    };
-
-    audio.play();
-  }, []);
+      };
+      setAudioIsPlaying(true); // Set audioIsPlaying state to true before playing audio
+      audio.play();
+    } else {
+      alert("itnerview complete!");
+    }
+  };
 
   const getUser = async () => {
     try {
@@ -106,6 +107,12 @@ function App() {
     setIsAuth(false);
     window.open("http://localhost:8080/auth/logout", "_self");
   };
+  useEffect(() => {
+    if (interviewQuestions.length > 0) {
+      playAudio(0);
+    }
+  }, [interviewQuestions]); // Watch for changes in interviewQuestions
+
   const startInterview = async () => {
     try {
       // Make a POST request to the server
@@ -137,7 +144,7 @@ function App() {
 
       setInterviewQuestions(questionTexts);
 
-      console.log(questionTexts);
+      console.log(interviewQuestions);
     } catch (error) {
       console.error("Error fetching interview questions:", error.message);
     } finally {
@@ -160,13 +167,8 @@ function App() {
     audio.controls = true;
 
     try {
-      // Read the contents of the audioBlob as binary data
       const arrayBuffer = await audioBlob.arrayBuffer();
-
-      // Convert the binary data into a UInt8Array
-
       const formData = new FormData();
-      // Set the audio data with the key "audioBytes"
       formData.append(
         "file",
         new Blob([arrayBuffer], { type: "audio/webm" }),
@@ -179,7 +181,7 @@ function App() {
       });
       const data = await response.json();
       setTranscription(data.transcriptionText);
-      console.log(data);
+      console.log("fetching...");
       if (!response.ok) {
         throw new Error("Failed to transcribe audio");
       }
@@ -240,7 +242,7 @@ function App() {
                   setJobDescription={setJobDescription}
                   startInterview={startInterview}
                   isInterviewing={isInterviewing}
-                  setIsInterviewing={setInterviewQuestions}
+                  setIsInterviewing={setIsInterviewing}
                   interviewQuestions={interviewQuestions}
                   setInterviewQuestions={setInterviewQuestions}
                   isLoading={isLoading}
