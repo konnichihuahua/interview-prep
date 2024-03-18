@@ -12,6 +12,7 @@ import questionsRoute from "./routes/questions.js";
 import transcribeRoute from "./routes/transcribe.js";
 import User from "./config.js";
 import bodyParser from "body-parser";
+import processInterviewRoute from "./routes/processInterview.js";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +44,7 @@ app.use(
 app.use("/auth", authRoute);
 app.use("/server", questionsRoute);
 app.use("/transcribe", transcribeRoute);
-
+app.use("/process-interview", processInterviewRoute);
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Listening to port ${port}...`);
