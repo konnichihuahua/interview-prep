@@ -24,9 +24,10 @@ function Home({
   setTranscription,
   addAudioElement,
   audioDuration,
+  restartInterview,
 }) {
   return (
-    <div className="flex flex-col p-5 gap-10">
+    <div className="flex flex-col p-5 gap-10 items-center justify-center">
       <div className="flex justify-center">
         {isLoading ? (
           <Loading />
@@ -44,6 +45,7 @@ function Home({
         ) : (
           <InterviewStart
             isInterviewing={isInterviewing}
+            setIsInterviewing={setIsInterviewing}
             interviewQuestions={interviewQuestions}
             audioIsPlaying={audioIsPlaying}
             playAudio={playAudio}
@@ -54,6 +56,7 @@ function Home({
             setTranscription={setTranscription}
             addAudioElement={addAudioElement}
             audioDuration={audioDuration}
+            restartInterview={restartInterview}
           />
         )}
       </div>

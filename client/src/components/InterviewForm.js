@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const InterviewForm = ({
   user,
@@ -12,15 +12,42 @@ const InterviewForm = ({
   const handleJobDescriptionChange = (e) => {
     setJobDescription(e.target.value);
   };
+  const [text, setText] = useState("");
+  const [isBlinking, setIsBlinking] = useState(true);
+
+  const originalText = "Ready to ace your interview?";
+  let index = 0;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setText(originalText.substring(0, index));
+      index++;
+      if (index > originalText.length) {
+        clearInterval(timer);
+        setIsBlinking(true);
+      }
+    }, 80); // Adjust typing speed as needed
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const blinkTimer = setInterval(() => {
+      setIsBlinking((prevBlink) => !prevBlink);
+    }, 500); // Adjust blinking speed as needed
+
+    return () => clearInterval(blinkTimer);
+  }, []);
 
   return (
     <div className="flex flex-col rounded-md p-5 gap-3">
-      <h1 className="mb-3">
-        <span className="text-4xl text-white font-medium tracking-tight">
-          {isAuth
-            ? `Hey ${user.displayName}, ready to ace your interview?`
-            : "Ready to ace your interview?"}
-        </span>
+      <h1 className="mb-3 text-white">
+        <p className="text-4xl font-bold relative overflow-hidden">
+          {text}
+          {isBlinking && (
+            <span className="inline-block w-1 h-5 bg-white mx-1"></span>
+          )}
+        </p>
       </h1>
       <p className="text-gray-400 text-lg">
         {" "}
@@ -34,7 +61,11 @@ const InterviewForm = ({
           value={jobDescription}
           onChange={handleJobDescriptionChange}
         />
-        <p>Sign in to get better questions in accordance to your resume.</p>
+        <p>
+          Please ensure your{" "}
+          <span className="underline"> microphone and earphones</span> are ready
+          before starting the job interview.
+        </p>
         <button
           type="button"
           onClick={startInterview}

@@ -44,7 +44,7 @@ async function processInterviewData(interviewData) {
               "interviewQuestion": "The interview question",
               "interviewAnswer": " The interview answer",
               "improvementSuggestions": {
-                "Rating": "Rating from 0-100",
+                "Rating": "Bad, Average, Good, Very Good",
                 "Clarity": "Suggestion on how to improve clarity",
                 "Relevance": "Suggestion on how to improve relevance",
                 "Effectiveness": [
@@ -65,7 +65,7 @@ async function processInterviewData(interviewData) {
 
     const suggestedImprovements = completion.choices[0].message.content;
 
-    suggestions.push({ suggestedImprovements });
+    suggestions.push(suggestedImprovements);
   }
 
   return suggestions;

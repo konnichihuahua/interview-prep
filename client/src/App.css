@@ -3,6 +3,17 @@
 @import "tailwindcss/utilities";
 
 
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}
+
+
+
 .App {
   color: white;
   background-color: #0E1117;
@@ -52,15 +63,29 @@ background-color: #23C6F4;
   animation: animate 2s infinite;
 }
 
-@keyframes animate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(720deg);
-  }
-}
 
 .record-btn {
   width:100px;
+}
+
+
+.question-results {
+  width: 210mm;
+  height: 297mm;
+}
+
+.question-results p {
+  font-size: 12px; /* Adjust font size as needed */
+  word-wrap: break-word; /* Ensure text wraps within the container */
+}
+.question-results {
+  overflow: auto; /* Add scrollbar if content overflows */
+}
+
+/* Or */
+
+.question-results p {
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncate text with ellipsis if it overflows */
+  white-space: nowrap;
 }

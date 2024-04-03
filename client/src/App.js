@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import Home from "./pages/Home";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./App.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
@@ -86,8 +86,6 @@ function App() {
       };
       setAudioIsPlaying(true); // Set audioIsPlaying state to true before playing audio
       audio.play();
-    } else {
-      alert("itnerview complete!");
     }
   };
 
@@ -103,16 +101,21 @@ function App() {
     }
   };
 
-  const googleSignOut = () => {
-    setIsAuth(false);
-    window.open("http://localhost:8080/auth/logout", "_self");
-  };
+  // const googleSignOut = () => {
+  //   setIsAuth(false);
+  //   window.open("http://localhost:8080/auth/logout", "_self");
+  // };
   useEffect(() => {
     if (interviewQuestions.length > 0) {
       playAudio(0);
     }
   }, [interviewQuestions]); // Watch for changes in interviewQuestions
-
+  const restartInterview = () => {
+    setTranscription("");
+    setCurrentQuestionIndex(0);
+    setAudioDuration(0);
+    setIsInterviewing(false);
+  };
   const startInterview = async () => {
     try {
       // Make a POST request to the server
@@ -197,8 +200,8 @@ function App() {
       <BrowserRouter>
         <header>
           <nav className="App-header flex justify-between items-center">
-            <NavLink className="min-w-100" to="/home">
-              <img src={logo} className="App-logo" alt="logo" />{" "}
+            <NavLink className="min-w-100">
+              <img src={logo} className="App-logo" alt="logo" />
             </NavLink>
             <div className="min-w-100">
               <button
@@ -208,7 +211,7 @@ function App() {
                 Get Free Interview Cheatsheet
               </button>
 
-              {isAuth ? (
+              {/* {isAuth ? (
                 <NavLink
                   type="button"
                   className="py-3 px-7 text-xs text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -226,7 +229,7 @@ function App() {
                   {" "}
                   Sign In
                 </NavLink>
-              )}
+              )} */}
             </div>
           </nav>
         </header>
@@ -234,6 +237,7 @@ function App() {
           <Routes>
             <Route
               index
+              path="/"
               element={
                 <Home
                   user={user}
@@ -256,10 +260,11 @@ function App() {
                   setTranscription={setTranscription}
                   addAudioElement={addAudioElement}
                   audioDuration={audioDuration}
+                  restartInterview={restartInterview}
                 />
               }
             ></Route>
-            <Route path="/home" element={<Home job />}></Route>
+
             <Route
               path="/login"
               element={<Login />}
