@@ -10,9 +10,11 @@ import ejs from "ejs";
 import authRoute from "./routes/auth.js";
 import questionsRoute from "./routes/questions.js";
 import transcribeRoute from "./routes/transcribe.js";
-import User from "./config.js";
+import Email from "./config.js";
 import bodyParser from "body-parser";
 import processInterviewRoute from "./routes/processInterview.js";
+import emailRoute from "./routes/emails.js";
+
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +47,8 @@ app.use("/auth", authRoute);
 app.use("/server", questionsRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/process-interview", processInterviewRoute);
+app.use("/api/", emailRoute);
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Listening to port ${port}...`);

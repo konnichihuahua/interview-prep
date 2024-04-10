@@ -20,6 +20,8 @@ const InterviewStart = ({
   audioIsPlaying,
   setIsInterviewing,
   restartInterview,
+  selectedVoice,
+  numQuestions,
 }) => {
   const recorderControls = useAudioRecorder();
   const [interviewData, setInterviewData] = useState([]);
@@ -118,7 +120,9 @@ const InterviewStart = ({
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ interviewData }),
+              body: JSON.stringify({
+                interviewData,
+              }),
             }
           );
 

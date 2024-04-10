@@ -11,14 +11,14 @@ const speechDirectory = "./audio"; // Directory to save MP3 files
 if (!fs.existsSync(speechDirectory)) {
   fs.mkdirSync(speechDirectory);
 }
-async function generateAudioFile(question, index) {
+async function generateAudioFile(question, index, selectedVoice) {
   const fileName = `question_${index}.mp3`; // Use index in file name
   const filePath = path.join(speechDirectory, fileName);
 
   try {
     const mp3 = await openai.audio.speech.create({
       model: "tts-1",
-      voice: "onyx",
+      voice: `${selectedVoice}`,
       input: `${question}`,
     });
 
@@ -30,29 +30,36 @@ async function generateAudioFile(question, index) {
   }
 }
 
-async function generateAndSaveAudioFiles(questions) {
+async function generateAndSaveAudioFiles(questions, selectedVoice) {
   for (let i = 0; i < questions.length; i++) {
-    await generateAudioFile(questions[i], i); // Pass index i
+    await generateAudioFile(questions[i], i, selectedVoice); // Pass index i
   }
 }
 
 router.post("/get/questions", async (req, res) => {
   try {
     // Ensure that the request body contains the jobDescription
-    const { jobDescription } = req.body;
+    let { jobDescription, numQuestions, selectedVoice } = req.body;
+    console.log(selectedVoice);
+    console.log(typeof selectedVoice);
     if (!jobDescription) {
       return res.status(400).json({ error: "Job description is required" });
     }
 
     // Generate interview questions based on the job description
-    const questions = await generateInterviewQuestions(jobDescription);
+    const questions = await generateInterviewQuestions(
+      jobDescription,
+      numQuestions
+    );
     const questionsArray = JSON.parse(questions).questions;
     const questionTexts = questionsArray.map(
       (questionObj) => questionObj.question
     );
 
     console.log(questionTexts);
-    await generateAndSaveAudioFiles(questionTexts);
+    selectedVoice = selectedVoice.toLowerCase();
+
+    await generateAndSaveAudioFiles(questionTexts, selectedVoice);
     res.json({ questions });
   } catch (error) {
     console.error("Error generating interview questions:", error.message);

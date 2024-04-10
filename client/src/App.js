@@ -1,11 +1,12 @@
 import logo from "./logo.svg";
 import Home from "./pages/Home";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import "./App.css";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import Login from "./pages/Login";
 import { useEffect } from "react";
+import InterviewCheatsheetPage from "./pages/InterviewCheatSheet";
 
 function App() {
   const [jobDescription, setJobDescription] = useState(`Job Description:
@@ -63,6 +64,9 @@ function App() {
   const [transcription, setTranscription] = useState("");
   const [user, setUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState("alloy");
+  const [numQuestions, setNumQuestions] = useState(3); // Default number of questions
+  const audioRef = useRef(null);
 
   const playAudio = async (index) => {
     console.log("Playing audio for question index:", index);
@@ -72,6 +76,8 @@ function App() {
       const audio = new Audio(
         `http://localhost:8080/audio/question_${index}.mp3`
       );
+      audioRef.current = audio;
+
       audio.onloadedmetadata = () => {
         console.log("Duration of audio:", audio.duration); // Log the duration of the audio
         setAudioDuration(audio.duration);
@@ -115,6 +121,10 @@ function App() {
     setCurrentQuestionIndex(0);
     setAudioDuration(0);
     setIsInterviewing(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setAudioIsPlaying(false);
   };
   const startInterview = async () => {
     try {
@@ -127,7 +137,7 @@ function App() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ jobDescription }),
+          body: JSON.stringify({ jobDescription, selectedVoice, numQuestions }),
         }
       );
 
@@ -200,16 +210,18 @@ function App() {
       <BrowserRouter>
         <header>
           <nav className="App-header flex justify-between items-center">
-            <NavLink className="min-w-100">
+            <NavLink onClick={restartInterview} to="/">
               <img src={logo} className="App-logo" alt="logo" />
             </NavLink>
+
             <div className="min-w-100">
-              <button
+              <NavLink
                 type="button"
-                className="py-3 px-7 text-xs text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                to="/interview-cheatsheet"
+                className="py-3 px-7 text-xs text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-00 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
               >
                 Get Free Interview Cheatsheet
-              </button>
+              </NavLink>
 
               {/* {isAuth ? (
                 <NavLink
@@ -261,15 +273,22 @@ function App() {
                   addAudioElement={addAudioElement}
                   audioDuration={audioDuration}
                   restartInterview={restartInterview}
+                  selectedVoice={selectedVoice}
+                  setSelectedVoice={setSelectedVoice}
+                  numQuestions={numQuestions}
+                  setNumQuestions={setNumQuestions}
                 />
               }
             ></Route>
-
             <Route
               path="/login"
               element={<Login />}
               setIsAuth={setIsAuth}
             ></Route>
+            <Route
+              path="/interview-cheatsheet"
+              element={<InterviewCheatsheetPage />}
+            />{" "}
           </Routes>
         </main>
       </BrowserRouter>

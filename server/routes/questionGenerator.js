@@ -3,14 +3,17 @@ import OpenAI from "openai";
 
 const openai = new OpenAI();
 
-export const generateInterviewQuestions = async (jobDescription) => {
+export const generateInterviewQuestions = async (
+  jobDescription,
+  numQuestions
+) => {
   console.log("generating questions");
   const completion = await openai.chat.completions.create({
     messages: [
       {
         role: "user",
         content: `
-        "I am a job seeker currently looking for employment. Please generate 1 interview questions based on the following job description, so I can practice for an upcoming interview: ${jobDescription}
+        "I am a job seeker currently looking for employment. Please generate ${numQuestions} interview questions based on the following job description, so I can practice for an upcoming interview: ${jobDescription}
         Ensure that each question is sent in JSON format.
 
         Expected JSON Response Template:

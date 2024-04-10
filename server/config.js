@@ -12,19 +12,12 @@ connect
     console.log("database connection failed");
   });
 
-const UserSchema = new mongoose.Schema({
-  googleId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  displayName: {
-    type: String,
-    required: true,
-  },
-  // Add other relevant fields as needed
+// Create a schema for emails
+const emailSchema = new mongoose.Schema({
+  email: String,
 });
 
-const User = mongoose.model("User", UserSchema); // Define the User model
+// Create a model based on the schema
+const Email = mongoose.model("Email", emailSchema);
 
-export default User;
+export default Email;

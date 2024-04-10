@@ -25,6 +25,10 @@ function Home({
   addAudioElement,
   audioDuration,
   restartInterview,
+  selectedVoice,
+  setSelectedVoice,
+  numQuestions,
+  setNumQuestions,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10 items-center justify-center">
@@ -41,6 +45,10 @@ function Home({
             setIsInterviewing={setIsInterviewing}
             setInterviewQuestions={setInterviewQuestions}
             setIsLoading={setIsLoading}
+            setSelectedVoice={setSelectedVoice}
+            setNumQuestions={setNumQuestions}
+            selectedVoice={selectedVoice}
+            numQuestions={numQuestions}
           />
         ) : (
           <InterviewStart
