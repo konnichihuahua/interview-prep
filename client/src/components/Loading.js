@@ -2,20 +2,27 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 
 const Loading = ({ user, isAuth, interviewQuestions }) => {
-  const [loadingText, setLoadingText] = useState("Generating questions...");
+  const [loadingText, setLoadingText] = useState("Ask smart questions...");
 
   useEffect(() => {
     const phrases = [
-      "Calling the interviewer...",
-      "Making some coffee...",
-      "Generating questions...",
+      "Dress sharp, breathe easy...",
+      "No gum, just grace...",
+      "Know them cold...",
+      "Tell tales of triumph...",
+      "Spy ears, pro talk...",
+      "Bring water, stay cool...",
+      "Humblebrag like a boss...",
+      "Ask smart questions...",
+      "Thank-you notes ASAP...",
     ];
+
     let currentIndex = 0;
 
     const interval = setInterval(() => {
       setLoadingText(phrases[currentIndex]);
       currentIndex = (currentIndex + 1) % phrases.length;
-    }, 2000);
+    }, 3500);
 
     return () => clearInterval(interval);
   }, []);

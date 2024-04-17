@@ -3,15 +3,23 @@ import "../App.css";
 
 const Loading = ({ user, isAuth, interviewQuestions }) => {
   const [loadingText, setLoadingText] = useState(
-    "Praying to the interview Gods..."
+    "Stay positive, even if it's raining cats and dogs"
   );
 
   useEffect(() => {
     const phrases = [
-      "Analyzing questions...",
-      "Applying magic...",
-      "Praying to the interview Gods...",
+      "Smile big, nerves small",
+      "Eye contact, not staring contests",
+      "Sit tall, no slouching allowed",
+      "Mirror their vibe, but stay authentic",
+      "Silence is golden, think before you speak",
+      "Show passion, not desperation",
+      "Don't trash talk previous employers",
+      "Be early, but not too early",
+      "Stay positive, even if it's raining cats and dogs",
+      "Follow up, but don't stalk",
     ];
+
     let currentIndex = 0;
 
     const interval = setInterval(() => {
