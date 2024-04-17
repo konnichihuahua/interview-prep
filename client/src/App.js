@@ -55,6 +55,8 @@ function App() {
   //     "_self"
   //   );
   // };
+  const baseURL = "https://interview-prep-production.up.railway.app";
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [audioIsPlaying, setAudioIsPlaying] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -73,7 +75,7 @@ function App() {
     console.log(currentQuestionIndex);
     console.log(interviewQuestions.length);
     if (index < interviewQuestions.length) {
-      const audio = new Audio(`audio/question_${index}.mp3`);
+      const audio = new Audio(`${baseURL}/audio/question_${index}.mp3`);
       audioRef.current = audio;
 
       audio.onloadedmetadata = () => {
@@ -124,7 +126,7 @@ function App() {
     try {
       // Make a POST request to the server
       setIsLoading(true);
-      const response = await fetch("server/get/questions", {
+      const response = await fetch(`${baseURL}/server/get/questions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +181,7 @@ function App() {
         "input.webm"
       );
 
-      const response = await fetch("/transcribe/stt", {
+      const response = await fetch(`${baseURL}/transcribe/stt`, {
         method: "POST",
         body: formData,
       });
@@ -268,6 +270,7 @@ function App() {
                   setSelectedVoice={setSelectedVoice}
                   numQuestions={numQuestions}
                   setNumQuestions={setNumQuestions}
+                  baseURL={baseURL}
                 />
               }
             ></Route>

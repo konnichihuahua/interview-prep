@@ -29,6 +29,7 @@ function Home({
   setSelectedVoice,
   numQuestions,
   setNumQuestions,
+  baseURL,
 }) {
   return (
     <div className="flex flex-col p-5 gap-10 items-center justify-center">
@@ -53,6 +54,7 @@ function Home({
         ) : (
           <InterviewStart
             isInterviewing={isInterviewing}
+            baseURL={baseURL}
             setIsInterviewing={setIsInterviewing}
             interviewQuestions={interviewQuestions}
             audioIsPlaying={audioIsPlaying}

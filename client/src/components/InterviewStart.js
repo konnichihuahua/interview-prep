@@ -22,6 +22,7 @@ const InterviewStart = ({
   restartInterview,
   selectedVoice,
   numQuestions,
+  baseURL,
 }) => {
   const recorderControls = useAudioRecorder();
   const [interviewData, setInterviewData] = useState([]);
@@ -113,7 +114,7 @@ const InterviewStart = ({
       setGeneratingResult(true);
       const sendInterviewDataToServer = async (interviewData) => {
         try {
-          const response = await fetch("/process-interview", {
+          const response = await fetch(`${baseURL}/process-interview`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
