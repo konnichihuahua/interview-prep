@@ -73,9 +73,7 @@ function App() {
     console.log(currentQuestionIndex);
     console.log(interviewQuestions.length);
     if (index < interviewQuestions.length) {
-      const audio = new Audio(
-        `http://localhost:8080/audio/question_${index}.mp3`
-      );
+      const audio = new Audio(`audio/question_${index}.mp3`);
       audioRef.current = audio;
 
       audio.onloadedmetadata = () => {
@@ -97,7 +95,7 @@ function App() {
 
   const getUser = async () => {
     try {
-      const url = "http://localhost:8080/auth/login/success";
+      const url = "/auth/login/success";
       const { data } = await axios.get(url, { withCredentials: true });
       console.log(data.user);
       setUser(data.user);
@@ -107,10 +105,6 @@ function App() {
     }
   };
 
-  // const googleSignOut = () => {
-  //   setIsAuth(false);
-  //   window.open("http://localhost:8080/auth/logout", "_self");
-  // };
   useEffect(() => {
     if (interviewQuestions.length > 0) {
       playAudio(0);
@@ -130,16 +124,13 @@ function App() {
     try {
       // Make a POST request to the server
       setIsLoading(true);
-      const response = await fetch(
-        "http://localhost:8080/server/get/questions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ jobDescription, selectedVoice, numQuestions }),
-        }
-      );
+      const response = await fetch("server/get/questions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ jobDescription, selectedVoice, numQuestions }),
+      });
 
       // Check if the request was successful
       if (!response.ok) {
@@ -188,7 +179,7 @@ function App() {
         "input.webm"
       );
 
-      const response = await fetch("http://localhost:8080/transcribe/stt", {
+      const response = await fetch("/transcribe/stt", {
         method: "POST",
         body: formData,
       });

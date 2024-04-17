@@ -113,18 +113,15 @@ const InterviewStart = ({
       setGeneratingResult(true);
       const sendInterviewDataToServer = async (interviewData) => {
         try {
-          const response = await fetch(
-            "http://localhost:8080/process-interview",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                interviewData,
-              }),
-            }
-          );
+          const response = await fetch("/process-interview", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              interviewData,
+            }),
+          });
 
           if (!response.ok) {
             throw new Error("Failed to process interview data");
