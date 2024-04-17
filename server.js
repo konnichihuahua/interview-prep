@@ -5,7 +5,7 @@ import passport from "passport";
 import cookieSession from "cookie-session";
 import "./passport.js";
 import path from "path";
-import bcrypt from "bcrypt";
+
 import ejs from "ejs";
 import authRoute from "./routes/auth.js";
 import questionsRoute from "./routes/questions.js";
@@ -48,6 +48,15 @@ app.use("/server", questionsRoute);
 app.use("/transcribe", transcribeRoute);
 app.use("/process-interview", processInterviewRoute);
 app.use("/api/", emailRoute);
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
